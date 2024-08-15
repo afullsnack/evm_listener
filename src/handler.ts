@@ -1,5 +1,4 @@
 import type { Log } from "viem"
-import {parseUnits} from "viem/utils"
 import { Effect, Schedule } from "effect"
 
 
@@ -18,7 +17,12 @@ export const handleLogs = (logs: Log[]) => Effect.gen(function*() {
       "https://smee.io/plOTQz6JGnW5WlN",
       { method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(logs[0], (_, v) => typeof v === 'bigint' ? v.toString() : v)
+        body: JSON.stringify(
+          logs[0],
+          // TODO: normalize bigint bofore calling webhook
+          //> instead of converting to string.
+          (_, v) => typeof v === 'bigint' ? v.toString() : v
+        )
       }).then((res) => res.json()),
     catch: () => Effect.fail(new Error("Error calling webhook forwarder"))
   })
