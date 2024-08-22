@@ -1,4 +1,4 @@
-import type { Log } from "viem"
+import { formatUnits, type Log } from "viem"
 import { Effect, Schedule } from "effect"
 
 
@@ -14,14 +14,14 @@ export const handleLogs = (logs: Log[]) => Effect.gen(function*() {
 
   const callWebhook = yield* Effect.tryPromise({
     try: () => fetch(
-      "https://smee.io/plOTQz6JGnW5WlN",
+      Bun.env.WEBHOOK_PROXY_PAYLOAD ?? "https://smee.io/f29WKHg05Pg0u4dT",
       { method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
           logs[0],
           // TODO: normalize bigint bofore calling webhook
           //> instead of converting to string.
-          (_, v) => typeof v === 'bigint' ? v.toString() : v
+          (_, v) => typeof v === 'bigint' ? formatUnits(v, 6) : v
         )
       }).then((res) => res.json()),
     catch: () => Effect.fail(new Error("Error calling webhook forwarder"))
