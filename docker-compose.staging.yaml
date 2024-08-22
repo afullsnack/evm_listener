@@ -1,0 +1,19 @@
+
+version: "3.9"
+services:
+  asc_evm_listener:
+    container_name: asc_evm_listener
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.staging
+    ports:
+      - 3000:8003
+
+networks:
+  app_network:
+    driver: bridge
+  asc_network:
+    driver: bridge

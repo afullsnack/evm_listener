@@ -20,3 +20,4 @@ const watchInstance = publicListenerClient.watchContractEvent({
 
 
 console.log(watchInstance, ":::watcher started")
+console.log(Bun.env.NODE_ENV, ":::node env")
