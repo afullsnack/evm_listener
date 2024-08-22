@@ -14,7 +14,9 @@ export const handleLogs = (logs: Log[]) => Effect.gen(function*() {
 
   const callWebhook = yield* Effect.tryPromise({
     try: () => fetch(
-      Bun.env.WEBHOOK_PROXY_PAYLOAD ?? "https://smee.io/f29WKHg05Pg0u4dT",
+      Bun.env.NODE_ENV === "development"
+        ? Bun.env.WEBHOOK_PROXY_PAYLOAD ?? "https://smee.io/f29WKHg05Pg0u4dT"
+          : "http://localhost:8080/api/services/blockchain/events/evm/burn",
       { method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
