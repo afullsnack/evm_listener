@@ -1,9 +1,9 @@
 
-import { publicListenerClient } from "./src/client"
-import tokenAbi from "./abi/ERC20Token.json"
+import { publicListenerClient } from "./client"
+import tokenAbi from "../abi/ERC20Token.json"
 import type {Abi} from "viem"
 import {Effect} from "effect"
-import { handleLogs, policy } from "./src/handler"
+import { handleLogs, policy } from "./handler"
 
 // TODO: create and manage listener for contract
 // > call webhook when event emitted
