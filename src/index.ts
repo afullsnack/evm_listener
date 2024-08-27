@@ -8,8 +8,9 @@ import { handleLogs, policy } from "./handler"
 // TODO: create and manage listener for contract
 // > call webhook when event emitted
 
-console.log(Bun.env.WEBHOOK_PROXY_PAYLOAD, ':::webhook proxy')
 
+function main() {
+// initialise listener
 const watchInstance = publicListenerClient.watchContractEvent({
   address: '0x2Dda0158EFe7006B8aFf9e5FEe6E9112F16841D8',
   eventName: 'Transfer',
@@ -22,3 +23,23 @@ const watchInstance = publicListenerClient.watchContractEvent({
 
 console.log(watchInstance, ":::watcher started")
 console.log(Bun.env.NODE_ENV, ":::node env")
+  
+}
+
+
+let maxMemoryConsumption = 0;
+let _dtoMaxMemoryConsumtion: string;
+
+process.nextTick(() => {
+  let memUsage = process.memoryUsage();
+  if(memUsage.rss > maxMemoryConsumption) {
+    maxMemoryConsumption = memUsage.rss;
+    _dtoMaxMemoryConsumtion = new Date().toLocaleTimeString()
+  }
+})
+
+
+process.on('exit', () => {
+  console.log(`Max memory consumption: ${maxMemoryConsumption} at ${_dtoMaxMemoryConsumtion}`)
+})
+
