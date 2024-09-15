@@ -2,7 +2,7 @@
 import { publicListenerClient } from "./src/client"
 import tokenAbi from "./abi/ERC20Token.json"
 import type {Abi} from "viem"
-import {Effect} from "effect"
+import {Console, Effect} from "effect"
 import { handleLogs } from "./src/handler"
 
 // TODO: create and manage listener for contract
@@ -18,7 +18,8 @@ const watchInstance = publicListenerClient.watchContractEvent({
   onLogs: logs => handleLogs(logs)
     .pipe(
       Effect.retry({ times: 3}),
-      Effect.runPromise
+      Effect.catchAll((e) => Console.log(e, ":::error occurred")),
+      Effect.runPromise,
     ),
   onError: error => console.log(error, "::: error on listening") // setup a graceful shutdown and restart on error, based on the type of error
 })
